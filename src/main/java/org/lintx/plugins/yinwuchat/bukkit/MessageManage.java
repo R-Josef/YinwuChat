@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.lintx.plugins.yinwuchat.Const;
-import org.lintx.plugins.yinwuchat.Util.GsonUtil;
+import org.lintx.plugins.yinwuchat.Util.Gson;
 import org.lintx.plugins.yinwuchat.Util.ItemUtil;
 import org.lintx.plugins.yinwuchat.Util.MessageUtil;
 import org.lintx.plugins.yinwuchat.json.*;
@@ -105,7 +105,7 @@ public class MessageManage {
     }
 
     private void sendPluginMessage(Player player, String channel, Message message) {
-        String json = GsonUtil.GSON.toJson(message);
+        String json = Gson.gson().toJson(message);
         ByteArrayDataOutput output = ByteStreams.newDataOutput();
         output.writeUTF(channel);
         output.writeUTF(json);

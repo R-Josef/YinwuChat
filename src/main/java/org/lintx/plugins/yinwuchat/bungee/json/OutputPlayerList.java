@@ -5,13 +5,12 @@
  */
 package org.lintx.plugins.yinwuchat.bungee.json;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import io.netty.channel.Channel;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import org.lintx.plugins.yinwuchat.Util.GsonUtil;
+import org.lintx.plugins.yinwuchat.Util.Gson;
 import org.lintx.plugins.yinwuchat.bungee.YinwuChat;
 import org.lintx.plugins.yinwuchat.bungee.config.PlayerConfig;
 import org.lintx.plugins.yinwuchat.bungee.httpserver.NettyChannelMessageHelper;
@@ -41,7 +40,7 @@ public class OutputPlayerList {
         JsonObject resultJsonObject = new JsonObject();
         resultJsonObject.addProperty("action", "game_player_list");
         resultJsonObject.add("player_list", jsonArray);
-        return GsonUtil.GSON.toJson(resultJsonObject);
+        return Gson.gson().toJson(resultJsonObject);
     }
 
     public static void sendGamePlayerList(Channel channel) {
@@ -73,7 +72,7 @@ public class OutputPlayerList {
         JsonObject resultJsonObject = new JsonObject();
         resultJsonObject.addProperty("action", "web_player_list");
         resultJsonObject.add("player_list", jsonArray);
-        return GsonUtil.GSON.toJson(resultJsonObject);
+        return Gson.gson().toJson(resultJsonObject);
     }
 
     public static void sendWebPlayerList(Channel channel) {

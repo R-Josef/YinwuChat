@@ -3,12 +3,15 @@ package org.lintx.plugins.yinwuchat.bukkit;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
 import com.google.gson.reflect.TypeToken;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.chat.ComponentSerializer;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.lintx.plugins.yinwuchat.Const;
@@ -18,6 +21,7 @@ import java.util.List;
 
 public class Listeners implements Listener, PluginMessageListener {
     private final YinwuChat plugin;
+    private static final Config CONFIG = Config.getInstance();
     Listeners(YinwuChat plugin){
         this.plugin = plugin;
     }

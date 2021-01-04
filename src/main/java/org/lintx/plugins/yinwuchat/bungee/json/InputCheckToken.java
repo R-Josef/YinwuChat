@@ -5,9 +5,8 @@
  */
 package org.lintx.plugins.yinwuchat.bungee.json;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import org.lintx.plugins.yinwuchat.Util.GsonUtil;
+import org.lintx.plugins.yinwuchat.Util.Gson;
 import org.lintx.plugins.yinwuchat.bungee.config.PlayerConfig;
 
 import java.util.UUID;
@@ -78,14 +77,14 @@ public class InputCheckToken extends InputBase {
         json.addProperty("isbind", isbind);
         json.addProperty("status", isvaild);
         json.addProperty("message", message);
-        return GsonUtil.GSON.toJson(json);
+        return Gson.gson().toJson(json);
     }
 
     public String getTokenJSON() {
         JsonObject json = new JsonObject();
         json.addProperty("action", "update_token");
         json.addProperty("token", token);
-        return GsonUtil.GSON.toJson(json);
+        return Gson.gson().toJson(json);
     }
 
 }

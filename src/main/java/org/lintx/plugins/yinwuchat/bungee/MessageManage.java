@@ -12,8 +12,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.connection.Server;
 import net.md_5.bungee.chat.ComponentSerializer;
 import org.lintx.plugins.yinwuchat.Const;
-import org.lintx.plugins.yinwuchat.Util.BCCUtils;
-import org.lintx.plugins.yinwuchat.Util.GsonUtil;
+import org.lintx.plugins.yinwuchat.Util.Gson;
 import org.lintx.plugins.yinwuchat.Util.MessageUtil;
 import org.lintx.plugins.yinwuchat.bungee.config.Config;
 import org.lintx.plugins.yinwuchat.bungee.config.PlayerConfig;
@@ -115,9 +114,9 @@ public class MessageManage {
             case Const.PLUGIN_SUB_CHANNEL_PLAYER_DEATH: {
                 if (!config.deathConfig.enable) break;
                 String json = input.readUTF();
-                Message msg = GsonUtil.GSON.fromJson(json, Message.class);
+                Message msg = Gson.gson().fromJson(json, Message.class);
                 final Set<UUID> set = msg.items.stream().map(UUID::fromString).collect(Collectors.toSet());
-                TextComponent component = MessageUtil.newTextComponent(ComponentSerializer.parse(msg.chat));
+                TextComponent component = MessageUtil.newTextComponent(msg.chat);
                 broadcast(null, component, config.deathConfig.noQQBroadcast, p -> !set.contains(p.getUniqueId()));
                 break;
             }
@@ -126,7 +125,7 @@ public class MessageManage {
                     return;
                 }
                 String json = input.readUTF();
-                PublicMessage publicMessage = GsonUtil.GSON.fromJson(json, PublicMessage.class);
+                PublicMessage publicMessage = Gson.gson().fromJson(json, PublicMessage.class);
                 if ("".equals(publicMessage.chat)) return;
 
                 BungeeChatPlayer fromPlayer = new BungeeChatPlayer();
@@ -170,7 +169,7 @@ public class MessageManage {
                     return;
                 }
                 String json = input.readUTF();
-                PrivateMessage privateMessage = GsonUtil.GSON.fromJson(json, PrivateMessage.class);
+                PrivateMessage privateMessage = Gson.gson().fromJson(json, PrivateMessage.class);
                 if ("".equals(privateMessage.chat)) return;
 
                 BungeeChatPlayer fromPlayer = new BungeeChatPlayer();
@@ -553,7 +552,7 @@ public class MessageManage {
     //定时任务发送广播消息
     public void broadcast(List<MessageFormat> formats, String server) {
         Chat chat = new Chat();
-        TextComponent messageComponent = MessageUtil.newTextComponent();
+        TextComponent messageComponent = new TextComponent();
         for (MessageFormat format : formats) {
             if (format.message == null || format.message.equals("")) continue;
             messageComponent.addExtra(chat.buildFormat(format));
@@ -629,7 +628,7 @@ public class MessageManage {
         JsonObject webjson = new JsonObject();
         webjson.addProperty("action", "send_message");
         webjson.addProperty("message", webmessage);
-        return GsonUtil.GSON.toJson(webjson);
+        return Gson.gson().toJson(webjson);
     }
 
     //给一个bc端玩家发送消息
@@ -659,7 +658,7 @@ public class MessageManage {
         if (config.redisConfig.openRedis) {
             list.addAll(RedisUtil.playerList.keySet());
         }
-        String json = GsonUtil.GSON.toJson(list);
+        String json = Gson.gson().toJson(list);
         ByteArrayDataOutput output = ByteStreams.newDataOutput();
         output.writeUTF(Const.PLUGIN_SUB_CHANNEL_PLAYER_LIST);
         output.writeUTF(json);

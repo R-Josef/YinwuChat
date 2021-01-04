@@ -3,4 +3,6 @@ target/
 /dependency-reduced-pom.xml
 /.idea
 *.iml
-
+web-source/node_modules/
+web-source/package-lock.json
+src/main/resources/web/
