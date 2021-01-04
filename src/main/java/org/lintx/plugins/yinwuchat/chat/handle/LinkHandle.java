@@ -1,3 +1,4 @@
+  
 package org.lintx.plugins.yinwuchat.chat.handle;
 
 import net.md_5.bungee.api.chat.TextComponent;
@@ -13,8 +14,8 @@ public class LinkHandle extends ChatHandle {
         handle(chat, regexp, (matcher) -> {
             String link = matcher.group(0);
             TextComponent component = MessageUtil.newTextComponent(MessageUtil.replace(config.tipsConfig.linkText));
-            chat.setHover(component,link);
-            chat.setClick(component,link);
+            chat.setHover(component, link);
+            chat.setClick(component, link);
             return component;
         });
     }

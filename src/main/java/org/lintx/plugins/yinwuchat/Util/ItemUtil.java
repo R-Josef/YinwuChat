@@ -1,5 +1,6 @@
 package org.lintx.plugins.yinwuchat.Util;
 
+import com.google.gson.JsonPrimitive;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -21,7 +22,7 @@ import java.util.List;
 import java.util.logging.Level;
 
 public class ItemUtil {
-    private static String convertItemToJson(ItemStack itemStack){
+    private static String convertItemToJson(ItemStack itemStack) {
         // ItemStack methods to get a net.minecraft.server.ItemStack object for serialization
         Class<?> craftItemStackClazz = ReflectionUtil.getOBCClass("inventory.CraftItemStack");
         Method asNMSCopyMethod = ReflectionUtil.getMethod(craftItemStackClazz, "asNMSCopy", ItemStack.class);
@@ -50,7 +51,7 @@ public class ItemUtil {
         return result;
     }
 
-    private static String getItemKey(ItemStack itemStack){
+    private static String getItemKey(ItemStack itemStack) {
         // ItemStack methods to get a net.minecraft.server.ItemStack object for serialization
         Class<?> craftItemStackClazz = ReflectionUtil.getOBCClass("inventory.CraftItemStack");
         Method asNMSCopyMethod = ReflectionUtil.getMethod(craftItemStackClazz, "asNMSCopy", ItemStack.class);
@@ -58,9 +59,9 @@ public class ItemUtil {
         // NMS Method to serialize a net.minecraft.server.ItemStack to a valid Json string
         Class<?> nmsItemStackClazz = ReflectionUtil.getNMSClass("ItemStack");
 
-        Method getItemMethod = ReflectionUtil.getMethod(nmsItemStackClazz,"getItem");
+        Method getItemMethod = ReflectionUtil.getMethod(nmsItemStackClazz, "getItem");
         Class<?> nmsItemClazz = ReflectionUtil.getNMSClass("Item");
-        Method getNameMethod = ReflectionUtil.getMethod(nmsItemClazz,"getName");
+        Method getNameMethod = ReflectionUtil.getMethod(nmsItemClazz, "getName");
 
         Object nmsItemStackObj; // This is the net.minecraft.server.ItemStack object received from the asNMSCopy method
         Object nmsItemObj;
@@ -82,19 +83,19 @@ public class ItemUtil {
     }
 
     //color:ItemStack.u().e.name();
-    private static BaseComponent getItemComponent(ItemStack itemStack){
+    private static BaseComponent getItemComponent(ItemStack itemStack) {
 
         TextComponent component = new TextComponent();
-        if (itemStack.hasItemMeta()){
+        if (itemStack.hasItemMeta()) {
             ItemMeta itemMeta = itemStack.getItemMeta();
-            if (itemMeta.hasDisplayName()){
+            if (itemMeta.hasDisplayName()) {
                 TextComponent textComponent = new TextComponent(itemMeta.getDisplayName());
                 component.addExtra(textComponent);
                 return component;
             }
         }
         String nmsName = getItemKey(itemStack);
-        if (nmsName!=null && !nmsName.equals("")){
+        if (nmsName != null && !nmsName.equals("")) {
             TranslatableComponent itemComponent = new TranslatableComponent(nmsName);
             component.addExtra(itemComponent);
             return component;
@@ -104,19 +105,19 @@ public class ItemUtil {
         return component;
     }
 
-    public static BaseComponent componentWithPlayer(ItemStack itemStack){
-        if (itemStack==null || itemStack.getType().equals(Material.AIR)){
+    private static BaseComponent componentWithPlayer(ItemStack itemStack) {
+        if (itemStack == null || itemStack.getType().equals(Material.AIR)) {
             return null;
         }
         ItemStack item = itemStack.clone();
         try {
-            if (item.getType().equals(Material.WRITABLE_BOOK) || item.getType().equals(Material.WRITTEN_BOOK)){
-                BookMeta bm = (BookMeta)item.getItemMeta();
+            if (item.getType().equals(Material.WRITABLE_BOOK) || item.getType().equals(Material.WRITTEN_BOOK)) {
+                BookMeta bm = (BookMeta) item.getItemMeta();
+                assert bm != null;
                 bm.setPages(Collections.emptyList());
                 item.setItemMeta(bm);
             }
-        }
-        catch (Exception | Error ignored){
+        } catch (Exception | Error ignored) {
 
         }
         try {
@@ -125,24 +126,27 @@ public class ItemUtil {
                     Material.LIGHT_BLUE_SHULKER_BOX, Material.LIME_SHULKER_BOX, Material.MAGENTA_SHULKER_BOX, Material.ORANGE_SHULKER_BOX,
                     Material.PINK_SHULKER_BOX, Material.PURPLE_SHULKER_BOX, Material.RED_SHULKER_BOX, Material.LIGHT_GRAY_SHULKER_BOX,
                     Material.WHITE_SHULKER_BOX, Material.YELLOW_SHULKER_BOX));
-            if (shulker_boxes.contains(item.getType())){
-                if (item.hasItemMeta()){
-                    BlockStateMeta bsm = (BlockStateMeta)item.getItemMeta();
-                    if (bsm.hasBlockState()){
-                        ShulkerBox sb = (ShulkerBox)bsm.getBlockState();
-                        for (ItemStack i:sb.getInventory()){
-                            if (i==null){
+            if (shulker_boxes.contains(item.getType())) {
+                if (item.hasItemMeta()) {
+                    BlockStateMeta bsm = (BlockStateMeta) item.getItemMeta();
+                    assert bsm != null;
+                    if (bsm.hasBlockState()) {
+                        ShulkerBox sb = (ShulkerBox) bsm.getBlockState();
+                        for (ItemStack i : sb.getInventory()) {
+                            if (i == null) {
                                 continue;
                             }
-                            if (i.getType().equals(Material.AIR)){
+                            if (i.getType().equals(Material.AIR)) {
                                 continue;
                             }
-                            if (!i.hasItemMeta()){
+                            if (!i.hasItemMeta()) {
                                 continue;
                             }
                             ItemMeta im = Bukkit.getItemFactory().getItemMeta(i.getType());
                             ItemMeta original = i.getItemMeta();
-                            if (original.hasDisplayName()){
+                            assert original != null;
+                            assert im != null;
+                            if (original.hasDisplayName()) {
                                 im.setDisplayName(original.getDisplayName());
                             }
                             i.setItemMeta(im);
@@ -152,8 +156,7 @@ public class ItemUtil {
                     item.setItemMeta(bsm);
                 }
             }
-        }
-        catch (Exception | Error ignored){
+        } catch (Exception | Error ignored) {
 
         }
 
@@ -162,11 +165,10 @@ public class ItemUtil {
         component.addExtra("§r§7[§r");
         try {
             component.addExtra(getItemComponent(item));
-        }
-        catch (Exception | Error e){
+        } catch (Exception | Error e) {
             component.addExtra(item.getType().name());
         }
-        if (item.getAmount()>1){
+        if (item.getAmount() > 1) {
             component.addExtra(" x" + item.getAmount());
         }
         component.addExtra("§r§7]§r");
@@ -177,15 +179,15 @@ public class ItemUtil {
                 new TextComponent(itemJson)
         };
 
-        HoverEvent event = new HoverEvent(HoverEvent.Action.SHOW_ITEM,hoverEventComponents);
+        HoverEvent event = new HoverEvent(HoverEvent.Action.SHOW_ITEM, hoverEventComponents);
         component.setHoverEvent(event);
 
         return component;
     }
 
-    public static String itemJsonWithPlayer(ItemStack itemStack){
+    public static String itemJsonWithPlayer(ItemStack itemStack) {
         BaseComponent component = componentWithPlayer(itemStack);
-        if (component==null) return null;
+        if (component == null) return null;
         return ComponentSerializer.toString(component);
     }
 }

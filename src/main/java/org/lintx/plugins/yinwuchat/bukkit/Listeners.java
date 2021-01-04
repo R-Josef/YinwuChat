@@ -58,4 +58,23 @@ public class Listeners implements Listener, PluginMessageListener {
             }
         }
     }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void on(PlayerDeathEvent event) {
+        if (!CONFIG.broadcastDeath) return;
+        final Player entity = event.getEntity();
+        final Object handle = NMSUtils.CraftPlayer$getHandle.apply(entity);
+        final Object realDeathMessage =
+                NMSUtils.EntityPlayer$getCombatTracker$getDeathMessage.apply(handle);
+        final String realDeathMessage$toString = NMSUtils.IChatBaseComponent$toPlainString.apply(realDeathMessage);
+        if (realDeathMessage$toString.equals(event.getDeathMessage())) {
+            final String deathJson = NMSUtils.IChatBaseComponent$toJson.apply(realDeathMessage);
+            MessageManage.getInstance().onPlayerDeath(entity, deathJson);
+        } else {
+            if (event.getDeathMessage() == null) return;
+            MessageManage.getInstance().onPlayerDeath(entity, ComponentSerializer.toString(TextComponent.fromLegacyText(
+                    event.getDeathMessage()
+            )));
+        }
+    }
 }

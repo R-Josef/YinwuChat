@@ -7,8 +7,8 @@ import org.bstats.bungeecord.Metrics;
 import org.lintx.plugins.yinwuchat.Const;
 import org.lintx.plugins.yinwuchat.bungee.announcement.Task;
 import org.lintx.plugins.yinwuchat.bungee.config.Config;
-import org.lintx.plugins.yinwuchat.bungee.httpserver.WsClientHelper;
 import org.lintx.plugins.yinwuchat.bungee.httpserver.NettyHttpServer;
+import org.lintx.plugins.yinwuchat.bungee.httpserver.WsClientHelper;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -17,6 +17,7 @@ import java.io.InputStream;
 import java.net.ServerSocket;
 import java.util.Enumeration;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -24,26 +25,27 @@ public class YinwuChat extends Plugin {
     private static YinwuChat plugin;
     private static NettyHttpServer server = null;
     private static BatManage batManage;
-    private ScheduledTask scheduledTask = null;
-    private Config config = Config.getInstance();
-    public static NettyHttpServer getWSServer(){
+    private final Config config = Config.getInstance();
+    private ScheduledTask scheduledTask;
+
+    public static NettyHttpServer getWSServer() {
         return server;
     }
 
-    public static YinwuChat getPlugin(){
+    public static YinwuChat getPlugin() {
         return plugin;
     }
 
-    static BatManage getBatManage(){
+    static BatManage getBatManage() {
         return batManage;
     }
 
-    void reload(){
+    void reload() {
         onDisable();
         onEnable();
     }
 
-    void reloadConfig(){
+    void reloadConfig() {
         //重载前是否开启了wsserver
         boolean wsopen = config.openwsserver;
         //重载前wsserver port
@@ -51,11 +53,11 @@ public class YinwuChat extends Plugin {
         //重新加载配置
         config.load(this);
         //重载前已开启wsserver且重载后关闭wsserver时关闭wsserver
-        if (wsopen && !config.openwsserver){
+        if (wsopen && !config.openwsserver) {
             stopWsServer();
         }
         //重载后开启wsserver且（重载前关闭wsserver或重载前port和重载后port不一致或wsserver未能成功开启）时启动wsserver
-        if (config.openwsserver && (!wsopen || wsport!=config.wsport || server==null)){
+        if (config.openwsserver && (!wsopen || wsport != config.wsport || server == null)) {
             startWs();
         }
         //重新加载task
@@ -63,8 +65,8 @@ public class YinwuChat extends Plugin {
         redisBungee();
     }
 
-    boolean wsIsOn(){
-        return config.openwsserver && server!=null;
+    boolean wsIsOn() {
+        return config.openwsserver && server != null;
     }
 
     @Override
@@ -85,18 +87,19 @@ public class YinwuChat extends Plugin {
         plugin = this;
         batManage = new BatManage(this);
         config.load(this);
-        if (config.openwsserver){
+        if (config.openwsserver) {
             startWs();
         }
         MessageManage.setPlugin(this);
         getProxy().registerChannel(Const.PLUGIN_CHANNEL);
-        getProxy().getPluginManager().registerListener(this,new Listeners(this));
-        getProxy().getPluginManager().registerCommand(this, new Commands(plugin,"yinwuchat"));
-        getProxy().getPluginManager().registerCommand(this,new IgnoreCommand(this,"ignore"));
+        getProxy().getPluginManager().registerListener(this, new Listeners(this));
+        getProxy().getPluginManager().registerCommand(this, new Commands(plugin, "yinwuchat"));
+        getProxy().getPluginManager().registerCommand(this, new CBroadcast());
+        getProxy().getPluginManager().registerCommand(this, new IgnoreCommand(this, "ignore"));
 
         org.lintx.plugins.yinwuchat.bungee.announcement.Config.getInstance().load(this);
         Task task = new Task();
-        scheduledTask = getProxy().getScheduler().schedule(this,task, 0L,1L, TimeUnit.SECONDS);
+        scheduledTask = getProxy().getScheduler().schedule(this, task, 0L, 1L, TimeUnit.SECONDS);
 
         MessageManage.getInstance().sendPlayerListToServer();
 
@@ -105,16 +108,17 @@ public class YinwuChat extends Plugin {
         Metrics metrics = new Metrics(this);
     }
 
-    private void redisBungee(){
-        if (config.redisConfig.openRedis){
+    private void redisBungee() {
+        if (config.redisConfig.openRedis) {
             RedisUtil.init(this);
         }
     }
 
     @Override
     public void onDisable() {
-        if (scheduledTask!=null){
+        if (scheduledTask != null) {
             scheduledTask.cancel();
+            scheduledTask = null;
         }
         stopWsServer();
         getProxy().unregisterChannel(Const.PLUGIN_CHANNEL);
@@ -123,23 +127,23 @@ public class YinwuChat extends Plugin {
         RedisUtil.unload();
     }
 
-    void startWs(){
+    void startWs() {
         stopWsServer();
 
         int port = config.wsport;
         if (!isPortAvailable(port)) {
-            getLogger().info(ChatColor.RED+"端口"+port+"被占用，无法开启WebSocket服务，请检查端口绑定情况，或稍后再试，或修改WebSocket端口！");
+            getLogger().info(ChatColor.RED + "端口" + port + "被占用，无法开启WebSocket服务，请检查端口绑定情况，或稍后再试，或修改WebSocket端口！");
             return;
         }
         try {
-            server = new NettyHttpServer(config.wsport,this,new File(getDataFolder(),"web"));
+            server = new NettyHttpServer(config.wsport, this, new File(getDataFolder(), "web"));
             getProxy().getScheduler().runAsync(this, () -> server.start());
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void stopWsServer(){
+    private void stopWsServer() {
         try {
             if (server != null) {
                 getLogger().info("Http Server stoping...");
@@ -164,11 +168,11 @@ public class YinwuChat extends Plugin {
         return false;
     }
 
-    private void autoFreedWeb(){
+    private void autoFreedWeb() {
         String rootFolder = "web/";
         File folder = this.getDataFolder();
         folder.mkdir();
-        new File(folder,rootFolder).mkdir();
+        new File(folder, rootFolder).mkdir();
 
         try (ZipFile zipFile = new ZipFile(getFile())) {
             Enumeration<? extends ZipEntry> entries = zipFile.entries();
@@ -181,45 +185,32 @@ public class YinwuChat extends Plugin {
         }
     }
 
-    private void copyFile(ZipFile zipFile, ZipEntry entry, String rootFolder){
+    private void copyFile(ZipFile zipFile, ZipEntry entry, String rootFolder) {
         String name = entry.getName();
-        if(!name.startsWith(rootFolder)){
+        if (!name.startsWith(rootFolder)) {
             return;
         }
 
         File file = new File(getDataFolder(), name);
-        if(entry.isDirectory()) {
+        if (entry.isDirectory()) {
             file.mkdirs();
-        }else {
-            if (file.exists()){
+        } else {
+            if (file.exists()) {
                 return;
             }
-            if (file.getParentFile().isDirectory()){
+            if (!file.getParentFile().isDirectory()) {
                 file.getParentFile().mkdir();
             }
-            FileOutputStream outputStream = null;
-            InputStream inputStream = null;
-            try {
-                byte[] buffer = new byte[1024];
-                outputStream = new FileOutputStream(file);
-                inputStream = zipFile.getInputStream(entry);
-                int len;
-                while ((len = inputStream.read(buffer)) >= 0) {
-                    outputStream.write(buffer,  0,  len);
+            try (FileOutputStream output = new FileOutputStream(file)) {
+                try (InputStream input = zipFile.getInputStream(entry)) {
+                    byte[] buffer = new byte[1024];
+                    int len;
+                    while ((len = input.read(buffer)) >= 0) {
+                        output.write(buffer, 0, len);
+                    }
                 }
-            } catch (IOException ignored) {
-
-            } finally {
-                try {
-                    outputStream.close();
-                } catch (IOException ignored) {
-
-                }
-                try {
-                    inputStream.close();
-                } catch (IOException ignored) {
-
-                }
+            } catch (IOException ioe) {
+                getLogger().log(Level.WARNING, "Failed to store files.", ioe);
             }
         }
     }
