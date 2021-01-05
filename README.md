@@ -1,14 +1,10 @@
 # YinwuChat 说明文档
 
-## 关于本fork
-原 YinwuChat 已经很久没有更新, 于是直接fork自己更新
-
-## 仓库地址
-- [Fork](https://github.com/Karlatemp/YinwuChat-Forked)
-- [无 Fork](https://github.com/Karlatemp/YinwuChat)
-- 两个仓库会同步修改推送, 创建一个新的无fork的仓库的原因是为了能让github搜索到
-
-关于本Fork的修改可见 [ChangeLog](./CHANGELOG.md) 
+### 关于本fork
+这个fork是为了将YinwuChat原版分支与Karlatemp的分支合并，将原作者Lintx和Karlatemp两者的后续更新包含在内，两个分支的后续修改都可参见 [ChangeLog](./CHANGELOG.md)。
+- [原版](https://github.com/lintx/Minecraft-Plugin-YinwuChat)
+- [Karlatemp版](https://github.com/Karlatemp/YinwuChat)
+- [Karlatemp版（Fork）](https://github.com/Karlatemp/YinwuChat-Forked)
 
 ### 关于YinwuChat
 YinwuChat同时是Bungeecord插件和Spigot插件，主要功能有。
@@ -23,7 +19,6 @@ YinwuChat同时是Bungeecord插件和Spigot插件，主要功能有。
 - 同步玩家进服退服到Q群
 
 注：你需要在你的Bungee服务端和这个Bungee接入的所有的Spigot服务端都安装这个插件
-
 
 ### Q群聊天同步
 1. YinwuChat插件配置
@@ -54,7 +49,6 @@ YinwuChat同时是Bungeecord插件和Spigot插件，主要功能有。
 4. redisConfig.password修改为redis服务器的密码
 5. redisConfig.selfName修改为每个BungeeCord端都不一样的一个字符串（插件内部标记消息来源及消息目的用，每个BungeeCord必须不一样，无其他要求）
 6. 重新加载插件后，在一个BungeeCord端接入的玩家发送的消息可以在其他BungeeCord端接入的玩家处看到
-
 
 ### 配置文件
 YinwuChat-Bungeecord的配置文件内容为：
@@ -307,7 +301,6 @@ messageHandles:       #自定义消息内容替换，比如下面默认的设置
     click: ''
 configVersion: 1  #配置文件的版本，请勿修改
 ```
-
 
 ### 接口
 
