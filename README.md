@@ -412,11 +412,13 @@ configVersion: 1  #配置文件的版本，请勿修改
 - `yinwuchat.vanish`允许进入聊天隐身模式
 - `yinwuchat.badword`允许编辑聊天系统关键词列表
 - `yinwuchat.monitor`允许玩家使用`/yinwuchat monitor`命令，并允许玩家监听其他玩家的私聊消息
-* 权限需要在Bungeecord中设置，玩家可以在Bungeecord连接到的任何服务器使用这个命令
+
+权限需要在Bungeecord中设置，玩家可以在Bungeecord连接到的任何服务器使用这个命令
 
 ### Bukkit端权限
-`yinwuchat.reload`玩家可以在游戏中使用`/yinwuchat-bukkit reload`命令重新加载bukkit端yinwuchat的配置，默认权限：仅OP可以使用
-`yinwuchat.style.x`是否允许玩家使用对应的样式代码，`x`为具体样式代码，具体为`0-9`,`a-f`,`klmnor`共22个样式代码，默认设置时`0-9`,`a-f`,`r`为允许，其他为不允许
+- `yinwuchat.reload`玩家可以在游戏中使用`/yinwuchat-bukkit reload`命令重新加载bukkit端yinwuchat的配置，默认仅OP可以使用
+- `yinwuchat.style.x`是否允许玩家使用对应的样式代码，`x`为具体样式代码，具体为`0-9`,`a-f`,`klmnor`共22个样式代码，默认`0-9`,`a-f`,`r`为允许，其他为不允许
+- `yinwuchat.style.rgb`是否允许玩家使用1.16的rgb聊天颜色，在聊天框使用&#xxxxxx即可将文本设置为rgb颜色，xxxxxx代表16进制颜色代码，默认仅op可以使用
 
 ### @所有人
 @所有人可以@整个服务器所有人（不包括WebSocket），或者分服务器@该服务器所有人（不包括WebSocket）
