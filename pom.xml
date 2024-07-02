@@ -7,7 +7,7 @@
     <groupId>org.lintx.plugins.yinwuchat</groupId>
     <artifactId>YinwuChat</artifactId>
     <!-- <version>2.11.1</version> -->
-    <version>2.12.3-RC</version>
+    <version>2.12.4-RC</version>
 
     <build>
         <plugins>
@@ -27,7 +27,7 @@
                             <artifactId>Configure</artifactId>
                             <version>1.2.3-SNAPSHOT</version>
                             <packaging>jar</packaging>
-                            <file>${project.basedir}/libs/Configure-1.2.3-SNAPSHOT.jar</file>
+                            <file>${project.basedir}/libs/Configure-1.2.5.jar</file>
                         </configuration>
                     </execution>
                     <execution>
@@ -125,7 +125,7 @@
         </repository>
         <repository>
             <id>placeholderapi</id>
-            <url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
+            <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
         <repository>
             <id>CodeMC</id>
@@ -137,7 +137,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.10</version>
+            <version>1.18.22</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -154,7 +154,7 @@
         <dependency>
             <groupId>org.lintx.plugins.modules</groupId>
             <artifactId>Configure</artifactId>
-            <version>1.2.3-SNAPSHOT</version>
+            <version>1.2.5</version>
         </dependency>
         <dependency>
             <groupId>net.md-5</groupId>
