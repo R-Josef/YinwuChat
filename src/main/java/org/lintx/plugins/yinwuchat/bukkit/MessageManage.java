@@ -12,6 +12,7 @@ import org.lintx.plugins.yinwuchat.Const;
 import org.lintx.plugins.yinwuchat.Util.Gson;
 import org.lintx.plugins.yinwuchat.Util.ItemUtil;
 import org.lintx.plugins.yinwuchat.Util.MessageUtil;
+import org.lintx.plugins.yinwuchat.Util.ReflectionUtil;
 import org.lintx.plugins.yinwuchat.json.*;
 
 import java.util.ArrayList;
@@ -146,30 +147,33 @@ public class MessageManage {
     }
 
     private List<String> getMessageItems(String message, Player player) {
+
         Pattern pattern = Pattern.compile(Const.ITEM_PLACEHOLDER);
         Matcher matcher = pattern.matcher(message);
         List<String> list = new ArrayList<>();
-        PlayerInventory inventory = player.getInventory();
-        while (matcher.find()) {
-            int index = -1;
-            String s = matcher.group(2);
-            try {
-                index = Integer.parseInt(s);
-                if (index > 40 || index < 0) {
-                    index = -1;
+        if (!ReflectionUtil.getVersion().equals("")) {
+            PlayerInventory inventory = player.getInventory();
+            while (matcher.find()) {
+                int index = -1;
+                String s = matcher.group(2);
+                try {
+                    index = Integer.parseInt(s);
+                    if (index > 40 || index < 0) {
+                        index = -1;
+                    }
+                } catch (Exception ignored) {
                 }
-            } catch (Exception ignored) {
-            }
-            ItemStack itemStack;
-            if (index == -1) {
-                itemStack = inventory.getItemInMainHand().getType() == Material.AIR
-                        ? player.getInventory().getItemInOffHand()
-                        : player.getInventory().getItemInMainHand();
-            } else {
-                itemStack = inventory.getItem(index);
-            }
+                ItemStack itemStack;
+                if (index == -1) {
+                    itemStack = inventory.getItemInMainHand().getType() == Material.AIR
+                            ? player.getInventory().getItemInOffHand()
+                            : player.getInventory().getItemInMainHand();
+                } else {
+                    itemStack = inventory.getItem(index);
+                }
 
-            list.add(ItemUtil.itemJsonWithPlayer(itemStack));
+                list.add(ItemUtil.itemJsonWithPlayer(itemStack));
+            }
         }
         return list;
     }

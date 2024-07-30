@@ -66,7 +66,11 @@ public class ReflectionUtil {
     public static String getVersion() {
         if (versionString == null) {
             String name = Bukkit.getServer().getClass().getPackage().getName();
-            versionString = name.substring(name.lastIndexOf('.') + 1) + ".";
+            if (name.equals("org.bukkit.craftbukkit")) {
+                versionString = "";
+            } else {
+                versionString = name.substring(name.lastIndexOf('.') + 1) + ".";
+            }
         }
 
         return versionString;

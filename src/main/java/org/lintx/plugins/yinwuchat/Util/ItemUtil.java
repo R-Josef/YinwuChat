@@ -14,6 +14,7 @@ import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,33 +53,42 @@ public class ItemUtil {
     }
 
     private static String getItemKey(ItemStack itemStack) {
-        // ItemStack methods to get a net.minecraft.server.ItemStack object for serialization
-        Class<?> craftItemStackClazz = ReflectionUtil.getOBCClass("inventory.CraftItemStack");
-        Method asNMSCopyMethod = ReflectionUtil.getMethod(craftItemStackClazz, "asNMSCopy", ItemStack.class);
+        String result = null;
+        if (ReflectionUtil.getVersion().equals("")) {
+            Method getTranslationKey = ReflectionUtil.getMethod(ItemStack.class, "getTranslationKey", null);
+            try {
+                result = (String) getTranslationKey.invoke(itemStack);
+            } catch (Throwable t) {
+                Bukkit.getLogger().log(Level.SEVERE, "failed to get translatable name from item", t);
+                return null;
+            }
+        } else {
+            // ItemStack methods to get a net.minecraft.server.ItemStack object for serialization
+            Class<?> craftItemStackClazz = ReflectionUtil.getOBCClass("inventory.CraftItemStack");
+            Method asNMSCopyMethod = ReflectionUtil.getMethod(craftItemStackClazz, "asNMSCopy", ItemStack.class);
 
-        // NMS Method to serialize a net.minecraft.server.ItemStack to a valid Json string
-        Class<?> nmsItemStackClazz = ReflectionUtil.getNMSClass("ItemStack");
+            // NMS Method to serialize a net.minecraft.server.ItemStack to a valid Json string
+            Class<?> nmsItemStackClazz = ReflectionUtil.getNMSClass("ItemStack");
 
-        Method getItemMethod = ReflectionUtil.getMethod(nmsItemStackClazz, "getItem");
-        Class<?> nmsItemClazz = ReflectionUtil.getNMSClass("Item");
-        Method getNameMethod = ReflectionUtil.getMethod(nmsItemClazz, "getName");
+            Method getItemMethod = ReflectionUtil.getMethod(nmsItemStackClazz, "getItem");
+            Class<?> nmsItemClazz = ReflectionUtil.getNMSClass("Item");
+            Method getNameMethod = ReflectionUtil.getMethod(nmsItemClazz, "getName");
 
-        Object nmsItemStackObj; // This is the net.minecraft.server.ItemStack object received from the asNMSCopy method
-        Object nmsItemObj;
-        Object nmsItemName;
-        String result;
+            Object nmsItemStackObj; // This is the net.minecraft.server.ItemStack object received from the asNMSCopy method
+            Object nmsItemObj;
+            Object nmsItemName;
 
-        try {
-            nmsItemStackObj = asNMSCopyMethod.invoke(null, itemStack);
+            try {
+                nmsItemStackObj = asNMSCopyMethod.invoke(null, itemStack);
 
-            nmsItemObj = getItemMethod.invoke(nmsItemStackObj);
-            nmsItemName = getNameMethod.invoke(nmsItemObj);
-            result = nmsItemName.toString();
-        } catch (Throwable t) {
-            Bukkit.getLogger().log(Level.SEVERE, "failed to serialize itemstack to nms item", t);
-            return null;
+                nmsItemObj = getItemMethod.invoke(nmsItemStackObj);
+                nmsItemName = getNameMethod.invoke(nmsItemObj);
+                result = nmsItemName.toString();
+            } catch (Throwable t) {
+                Bukkit.getLogger().log(Level.SEVERE, "failed to serialize itemstack to nms item", t);
+                return null;
+            }
         }
-
         return result;
     }
 
