@@ -2,6 +2,7 @@ package org.lintx.plugins.yinwuchat.bungee;
 
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
+import net.luckperms.api.model.user.User;
 
 import java.util.UUID;
 
@@ -12,6 +13,11 @@ public class PermissionUtil {
             return true;
         }
         LuckPerms luckPerms = LuckPermsProvider.get();
-        return luckPerms.getUserManager().getUser(uuid).getCachedData().getPermissionData().checkPermission(permission).asBoolean();
+        User user = luckPerms.getUserManager().getUser(uuid);
+        if (user != null) {
+            return user.getCachedData().getPermissionData().checkPermission(permission).asBoolean();
+        } else {
+            return false;
+        }
     }
 }

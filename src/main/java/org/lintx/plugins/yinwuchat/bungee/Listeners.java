@@ -23,7 +23,6 @@ public class Listeners implements Listener {
 
     @EventHandler
     public void onPluginMessage(PluginMessageEvent event) {
-        event.setCancelled(true);
         if (event.getTag().equals(Const.PLUGIN_CHANNEL)) {
             plugin.getProxy().getScheduler().runAsync(plugin, new Runnable() {
                 @Override
