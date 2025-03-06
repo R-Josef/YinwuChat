@@ -16,5 +16,7 @@ public class Const {
     public final static String PERMISSION_VANISH = "yinwuchat.vanish";
     public final static String PERMISSION_COOL_DOWN_BYPASS = "yinwuchat.cooldown.bypass";
     public final static String PERMISSION_MONITOR_PRIVATE_MESSAGE = "yinwuchat.monitor";
+    public final static String PERMISSION_PREFIX = "yinwuchat.prefix";
+    public final static String PERMISSION_SUFFIX = "yinwuchat.suffix";
 
 }

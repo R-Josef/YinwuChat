@@ -412,6 +412,8 @@ configVersion: 1  #配置文件的版本，请勿修改
 - `yinwuchat.vanish`允许进入聊天隐身模式
 - `yinwuchat.badword`允许编辑聊天系统关键词列表
 - `yinwuchat.monitor`允许玩家使用`/yinwuchat monitor`命令，并允许玩家监听其他玩家的私聊消息
+- `yinwuchat.prefix`允许玩家显示前缀
+- `yinwuchat.suffix`允许玩家显示后缀
 
 权限需要在Bungeecord中设置，玩家可以在Bungeecord连接到的任何服务器使用这个命令
 

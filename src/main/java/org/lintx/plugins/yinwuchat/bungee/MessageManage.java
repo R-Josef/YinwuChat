@@ -139,9 +139,9 @@ public class MessageManage {
                     notQQ = !publicMessage.chat.startsWith(Config.getInstance().coolQConfig.gameToCoolqStart);
                 }
 
-                if (PermissionUtil.hasPermission(player.getUniqueId(), "yinwuchat.prefix") && config.allowPlayerFormatPrefixSuffix && null != fromPlayer.config.publicPrefix && !"".equals(fromPlayer.config.publicPrefix))
+                if (PermissionUtil.hasPermission(player.getUniqueId(), Const.PERMISSION_PREFIX) && config.allowPlayerFormatPrefixSuffix && null != fromPlayer.config.publicPrefix && !"".equals(fromPlayer.config.publicPrefix))
                     publicMessage.chat = fromPlayer.config.publicPrefix + publicMessage.chat;
-                if (PermissionUtil.hasPermission(player.getUniqueId(), "yinwuchat.suffix") && config.allowPlayerFormatPrefixSuffix && null != fromPlayer.config.publicSuffix && !"".equals(fromPlayer.config.publicSuffix))
+                if (PermissionUtil.hasPermission(player.getUniqueId(), Const.PERMISSION_SUFFIX) && config.allowPlayerFormatPrefixSuffix && null != fromPlayer.config.publicSuffix && !"".equals(fromPlayer.config.publicSuffix))
                     publicMessage.chat = publicMessage.chat + fromPlayer.config.publicSuffix;
 
                 String message = handleShielded(player, publicMessage.chat);
@@ -178,9 +178,9 @@ public class MessageManage {
                 fromPlayer.player = player;
                 fromPlayer.config = PlayerConfig.getConfig(player);
 
-                if (PermissionUtil.hasPermission(player.getUniqueId(), "yinwuchat.prefix") && config.allowPlayerFormatPrefixSuffix && null != fromPlayer.config.privatePrefix && !"".equals(fromPlayer.config.privatePrefix))
+                if (PermissionUtil.hasPermission(player.getUniqueId(), Const.PERMISSION_PREFIX) && config.allowPlayerFormatPrefixSuffix && null != fromPlayer.config.privatePrefix && !"".equals(fromPlayer.config.privatePrefix))
                     privateMessage.chat = fromPlayer.config.privatePrefix + privateMessage.chat;
-                if (PermissionUtil.hasPermission(player.getUniqueId(), "yinwuchat.suffix") && config.allowPlayerFormatPrefixSuffix && null != fromPlayer.config.privateSuffix && !"".equals(fromPlayer.config.privateSuffix))
+                if (PermissionUtil.hasPermission(player.getUniqueId(), Const.PERMISSION_SUFFIX) && config.allowPlayerFormatPrefixSuffix && null != fromPlayer.config.privateSuffix && !"".equals(fromPlayer.config.privateSuffix))
                     privateMessage.chat = privateMessage.chat + fromPlayer.config.privateSuffix;
 
                 BungeeChatPlayer toPlayer = getPrivateMessageToPlayer(privateMessage.toPlayer);
@@ -390,9 +390,9 @@ public class MessageManage {
             return;
         }
 
-        if (PermissionUtil.hasPermission(util.getUuid(), "yinwuchat.prefix") && config.allowPlayerFormatPrefixSuffix && null != playerConfig.privatePrefix && !"".equals(playerConfig.privatePrefix))
+        if (PermissionUtil.hasPermission(util.getUuid(), Const.PERMISSION_PREFIX) && config.allowPlayerFormatPrefixSuffix && null != playerConfig.privatePrefix && !"".equals(playerConfig.privatePrefix))
             message = playerConfig.privatePrefix + message;
-        if (PermissionUtil.hasPermission(util.getUuid(), "yinwuchat.suffix") && config.allowPlayerFormatPrefixSuffix && null != playerConfig.privateSuffix && !"".equals(playerConfig.privateSuffix))
+        if (PermissionUtil.hasPermission(util.getUuid(), Const.PERMISSION_SUFFIX) && config.allowPlayerFormatPrefixSuffix && null != playerConfig.privateSuffix && !"".equals(playerConfig.privateSuffix))
             message = message + playerConfig.privateSuffix;
 
         ShieldedManage.Result result = ShieldedManage.getInstance().checkShielded(channel, util.getUuid().toString(), message);
@@ -479,9 +479,9 @@ public class MessageManage {
             notQQ = !message.startsWith(Config.getInstance().coolQConfig.gameToCoolqStart);
         }
 
-        if (PermissionUtil.hasPermission(uuid, "yinwuchat.prefix") && config.allowPlayerFormatPrefixSuffix && null != playerConfig.publicPrefix && !"".equals(playerConfig.publicPrefix))
+        if (PermissionUtil.hasPermission(uuid, Const.PERMISSION_PREFIX) && config.allowPlayerFormatPrefixSuffix && null != playerConfig.publicPrefix && !"".equals(playerConfig.publicPrefix))
             message = playerConfig.publicPrefix + message;
-        if (PermissionUtil.hasPermission(uuid, "yinwuchat.suffix") && config.allowPlayerFormatPrefixSuffix && null != playerConfig.publicSuffix && !"".equals(playerConfig.publicSuffix))
+        if (PermissionUtil.hasPermission(uuid, Const.PERMISSION_SUFFIX) && config.allowPlayerFormatPrefixSuffix && null != playerConfig.publicSuffix && !"".equals(playerConfig.publicSuffix))
             message = message + playerConfig.publicSuffix;
 
         ShieldedManage.Result result = ShieldedManage.getInstance().checkShielded(channel, uuid.toString(), message);

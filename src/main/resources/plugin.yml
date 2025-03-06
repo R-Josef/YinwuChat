@@ -22,6 +22,10 @@ permissions:
     children:
       yinwuchat.reload:
         default: op
+      yinwuchat.prefix:
+        default: op
+      yinwuchat.suffix:
+        default: op
       yinwuchat.style:
         default: op
         children:
