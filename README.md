@@ -435,5 +435,14 @@ configVersion: 1  #配置文件的版本，请勿修改
 -:|-
 001|根据UUID查找用户失败，且新增失败
 
+### 构建
+
+1. 安装 Node.js 14.21.3
+2. cd 至 YinwuChat\web-source
+3. 执行 `npm install` 和 `npm run build` 命令
+4. 安装 JDK 1.8 和 maven
+5. cd 至 YinwuChat
+6. 执行 `mvn validate` 和 `mvn install` 命令
+
 ### 其他信息
 本插件由国内正版Minecraft服务器[YinwuRealm](https://www.yinwurealm.org/)玩家[LinTx](https://mine.ly/LinTx.1)为服务器开发
