@@ -16,6 +16,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.lintx.plugins.yinwuchat.Const;
 import org.lintx.plugins.yinwuchat.Util.Gson;
+import org.lintx.plugins.yinwuchat.Util.ReflectionUtil;
 
 import java.util.List;
 
@@ -67,10 +68,13 @@ public class Listeners implements Listener, PluginMessageListener {
     public void on(PlayerDeathEvent event) {
         if (!CONFIG.broadcastDeath) return;
         final Player entity = event.getEntity();
-        final Object handle = NMSUtils.CraftPlayer$getHandle.apply(entity);
-        final Object realDeathMessage =
-                NMSUtils.EntityPlayer$getCombatTracker$getDeathMessage.apply(handle);
-        final String realDeathMessage$toString = NMSUtils.IChatBaseComponent$toPlainString.apply(realDeathMessage);
+        Object realDeathMessage = "";
+        String realDeathMessage$toString = "";
+        if (!ReflectionUtil.getVersion().equals("")) {
+            final Object handle = NMSUtils.CraftPlayer$getHandle.apply(entity);
+            realDeathMessage = NMSUtils.EntityPlayer$getCombatTracker$getDeathMessage.apply(handle);
+            realDeathMessage$toString = NMSUtils.IChatBaseComponent$toPlainString.apply(realDeathMessage);
+        }
         if (realDeathMessage$toString.equals(event.getDeathMessage())) {
             final String deathJson = NMSUtils.IChatBaseComponent$toJson.apply(realDeathMessage);
             MessageManage.getInstance().onPlayerDeath(entity, deathJson);
